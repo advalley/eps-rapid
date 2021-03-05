@@ -1,0 +1,22 @@
+AllCops:
+  NewCops: enable
+  DisabledByDefault: false
+  DisplayCopNames: true
+  TargetRubyVersion: 2.6.2
+  Exclude:
+    - bin/*
+    - db/**/*.rb
+    - config/**/*.rb
+    - node_modules/**/*
+    - tmp/**/*
+Documentation:
+  Enabled: false
+Metrics/LineLength:
+  Max: 120
+Lint/UselessAssignment:
+  Enabled: true
+Metrics/BlockLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: true
+  Max: 35
