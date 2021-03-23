@@ -21,10 +21,3 @@ module EpsRapid
     end
   end
 end
-
-EpsRapid.configure do |c|
-  c.api_key = '21n6j1ea76vpnlffdi395cu311'
-  c.secret_key = '64v9oo1mnonk5'
-  c.base_path = 'https://test.ean.com/2.4'
-  c.language = 'en-US'
-end
