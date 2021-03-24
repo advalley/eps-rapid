@@ -14,7 +14,7 @@ RSpec.describe EpsRapid::Geography do
 
   describe '#get_regions_list' do
     it 'should return regions list' do
-      stub_request(:get, 'https://test.ean.com/2.4/regions?ancestor_id=0&include=standard&language=en-US')
+      stub_request(:get, 'https://test.ean.com/2.4/regions?include=standard&language=en-US')
         .with(
           headers: {
             'Accept' => 'application/json',
@@ -26,7 +26,7 @@ RSpec.describe EpsRapid::Geography do
           }
         ).to_return(status: 200, body: File.read('spec/fixtures/regions.txt'))
 
-      response = EpsRapid::Geography.get_regions_list
+      response = EpsRapid::Geography.regions_list
 
       expect(response).to be_kind_of(Array)
       expect(response.first).to have_key('id')
@@ -47,7 +47,7 @@ RSpec.describe EpsRapid::Geography do
         ).to_return(status: 400, body: File.read('spec/fixtures/regions_invalid.txt'))
 
       expect do
-        EpsRapid::Geography.get_regions_list('ancestor')
+        EpsRapid::Geography.regions_list(ancestor_id: 'ancestor')
       end.to raise_error(EpsRapid::Exceptions::BadRequestError, 'Code: 400, Error: Ancestor id must be numeric.')
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe EpsRapid::Geography do
           }
         ).to_return(status: 200, body: File.read('spec/fixtures/region.txt'))
 
-      response = EpsRapid::Geography.get_region(2)
+      response = EpsRapid::Geography.region(2)
 
       expect(response['id']).to eq('2')
       expect(response['name']).to eq('Albania')
@@ -86,7 +86,7 @@ RSpec.describe EpsRapid::Geography do
         ).to_return(status: 400, body: File.read('spec/fixtures/region_invalid.txt'))
 
       expect do
-        EpsRapid::Geography.get_region(1)
+        EpsRapid::Geography.region(1)
       end.to raise_error(
         EpsRapid::Exceptions::BadRequestError,
         'Code: 400, Error: The requested region could not be found.'
