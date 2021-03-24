@@ -5,6 +5,7 @@ require 'eps-rapid/client'
 require 'eps-rapid/errors/exceptions'
 require 'eps-rapid/errors/http_status_codes'
 require 'eps-rapid/geography'
+require 'eps-rapid/content'
 require 'digest'
 
 module EpsRapid

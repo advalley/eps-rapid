@@ -27,6 +27,7 @@ module EpsRapid
       def generate_uri(path, **params)
         uri = URI("#{EpsRapid.base_path}/#{path}")
         params.merge!({ language: EpsRapid.language })
+        params.transform_values! { |v| v.to_s.tr(' ', '').split(',') }
         uri.query = URI.encode_www_form(params)
         uri
       end
@@ -37,7 +38,7 @@ module EpsRapid
         req['Content-Type'] = 'application/json'
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
-        return response if response.code.to_i == HttpStatusCodes::HTTP_OK_CODE
+        return JSON.parse(response.body) if response.code.to_i == HttpStatusCodes::HTTP_OK_CODE
 
         raise error_class(response.code), "Code: #{response.code}, Error: #{map_error_messages(response.body)}"
       end
