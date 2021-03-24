@@ -4,13 +4,17 @@ AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.6.2
   Exclude:
-    - bin/*
-    - db/**/*.rb
-    - config/**/*.rb
-    - node_modules/**/*
-    - tmp/**/*
+    - 'bin/*'
+    - 'spec/spec_helper.rb'
+    - 'eps-rapid.gemspec'
 Documentation:
   Enabled: false
+Metrics/MethodLength:
+  Max: 25
+Metrics/CyclomaticComplexity:
+  Max: 12
+Metrics/PerceivedComplexity:
+  Max: 12
 Metrics/LineLength:
   Max: 120
 Lint/UselessAssignment:
@@ -20,3 +24,5 @@ Metrics/BlockLength:
 Metrics/AbcSize:
   Enabled: true
   Max: 35
+Naming/FileName:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'eps-rapid/version'
 require 'eps-rapid/client'
 require 'eps-rapid/errors/exceptions'
@@ -15,9 +17,9 @@ module EpsRapid
 
     def auth_header
       timestamp    = Time.now.to_i
-      to_be_hashed = "#{self.api_key}#{self.secret_key}#{timestamp}"
+      to_be_hashed = "#{api_key}#{secret_key}#{timestamp}"
       signature    = Digest::SHA2.new(512).hexdigest(to_be_hashed)
-      auth_header  = "EAN apikey=#{self.api_key},signature=#{signature},timestamp=#{timestamp}"
+      "EAN apikey=#{api_key},signature=#{signature},timestamp=#{timestamp}"
     end
   end
 end
