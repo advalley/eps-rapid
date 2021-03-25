@@ -1,0 +1,1 @@
+{"type": "invalid_input","message": "An invalid request was sent in, please check the nested errors for details.","errors":[{"type": "property_id.must_be_numeric","message": "All provided property_id query parameters must be numeric (contains only digits 0-9, with no other characters).","fields":[{"name": "property_id","type": "querystring","value": "test"}]}]}
