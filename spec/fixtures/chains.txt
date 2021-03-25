@@ -1,0 +1,104 @@
+{
+  "2102": {
+    "id": "2102",
+    "name": "MGM",
+    "brands": {
+      "2102": {
+        "id": "2102",
+        "name": "MGM"
+      }
+    }
+  },
+  "4445": {
+    "id": "4445",
+    "name": "Studios 2 Let",
+    "brands": {
+      "4498": {
+        "id": "4498",
+        "name": "Studios 2 Let"
+      }
+    }
+  },
+  "6200": {
+    "id": "6200",
+    "name": "Urban Dream Hotels",
+    "brands": {
+      "6325": {
+        "id": "6325",
+        "name": "Urban Dream Hotels"
+      }
+    }
+  },
+  "6325": {
+    "id": "6325",
+    "name": "Isla Bonita",
+    "brands": {
+      "6399": {
+        "id": "6399",
+        "name": "Isla Bonita"
+      }
+    }
+  },
+  "-5": {
+    "id": "-5",
+    "name": "Hilton Worldwide",
+    "brands": {
+      "33": {
+        "id": "33",
+        "name": "Doubletree"
+      },
+      "38": {
+        "id": "38",
+        "name": "Embassy Suites"
+      },
+      "54": {
+        "id": "54",
+        "name": "Homewood Suites"
+      },
+      "55": {
+        "id": "55",
+        "name": "Hilton Hotels"
+      },
+      "358": {
+        "id": "358",
+        "name": "Hampton Inn"
+      },
+      "2059": {
+        "id": "2059",
+        "name": "Hilton Garden Inn"
+      },
+      "2146": {
+        "id": "2146",
+        "name": "Conrad"
+      },
+      "2194": {
+        "id": "2194",
+        "name": "Waldorf Astoria"
+      },
+      "2199": {
+        "id": "2199",
+        "name": "Hilton International"
+      },
+      "2513": {
+        "id": "2513",
+        "name": "Hilton Grand Vacations"
+      },
+      "2608": {
+        "id": "2608",
+        "name": "Home2 Suites by Hilton"
+      },
+      "3000": {
+        "id": "3000",
+        "name": "Curio Collection"
+      },
+      "4138": {
+        "id": "4138",
+        "name": "Tru by Hilton"
+      },
+      "4615": {
+        "id": "4615",
+        "name": "Tapestry Collection by Hilton"
+      }
+    }
+  }
+}

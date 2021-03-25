@@ -1,0 +1,26 @@
+{
+  "verified": {
+    "recent": [
+      {
+        "verification_source": "Expedia verified Review",
+        "title": "Definitely staying again",
+        "date_submitted": "2019-02-11T18:19:40Z",
+        "rating": "5",
+        "reviewer_name": "Bill",
+        "trip_reason": "leisure",
+        "travel_companion": "self",
+        "text": "Staff very helpful and friendly. Pool was 18 meters deep, very strange."
+      },
+      {
+        "verification_source": "Expedia verified Review",
+        "title": "Pool much too deep",
+        "date_submitted": "2019-02-10T11:15:01Z",
+        "rating": "2",
+        "reviewer_name": "Gregory",
+        "trip_reason": "friends_and_family",
+        "travel_companion": "family_with_children",
+        "text": "Bottom of the 18 meter pool was too scary. Staff were nice though."
+      }
+    ]
+  }
+}
