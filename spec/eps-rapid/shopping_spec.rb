@@ -166,7 +166,7 @@ RSpec.describe EpsRapid::Shopping do
   end
 
   describe '#additional_rates' do
-    it 'should return an additional rates' do
+    it 'should return an additional rates list' do
       stub_request(:get, 'https://test.ean.com/2.4/properties/12345/availability?token=REhZAQsABAMG')
         .with(
           headers: {
@@ -185,8 +185,8 @@ RSpec.describe EpsRapid::Shopping do
     end
   end
 
-  describe '#recommendations' do
-    it 'should return a recommendations list' do
+  describe '#recommendation_rates' do
+    it 'should return a recommendation rates list' do
       stub_request(:get, 'https://test.ean.com/2.4/properties/12345/availability?token=REhZAQsABAMCx')
         .with(
           headers: {
@@ -199,7 +199,7 @@ RSpec.describe EpsRapid::Shopping do
           }
         ).to_return(status: 200, body: File.read('spec/fixtures/additional_rates.txt'))
 
-      response = EpsRapid::Shopping.recommendations('properties/12345/availability?token=REhZAQsABAMCx')
+      response = EpsRapid::Shopping.recommendation_rates('properties/12345/availability?token=REhZAQsABAMCx')
 
       expect(response).to be_kind_of(Array)
     end

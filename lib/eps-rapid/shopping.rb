@@ -22,7 +22,7 @@ module EpsRapid
       EpsRapid::Client.get_by_link(path, params)
     end
 
-    def self.recommendations(path, **params)
+    def self.recommendation_rates(path, **params)
       EpsRapid::Client.get_by_link(path, params)
     end
   end

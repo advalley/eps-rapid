@@ -122,3 +122,106 @@ Chains represent a parent company which can have multiple brands associated with
 The response is a JSON map where the key is the chain ID and the value is a chain object. Each chain object also contains a map of its related brands.
 Note that the set of chain IDs and brand IDs are totally independent of one another. It is possible for a chain and a brand to both use the same number as their ID, but this is just a coincidence that holds no meaning.
 Chain and brand names are provided in English only.
+
+### Shopping API
+The EPS Rapid Shopping API provides you with access to live rates and availability for over 500,000 properties globally.
+https://developer.expediapartnersolutions.com/documentation/rapid-shopping-docs-2-4/#/Shopping/
+#### Methods
+```ruby
+EpsRapid::Content.availability(occupancy: '2-9,4;2-8,6', property_id: '12345,567899', country_code: 'US', sales_environment: 'hotel_package', sales_channel: 'website', checkin: '2021-05-01', checkout: '2021-05-03', currency: 'USD', rate_plan_count: '1')
+```
+Returns rates on available room types for specified properties (maximum of 250 properties per request). The response includes rate details such as promos, whether the rate is refundable, cancellation penalties and a full price breakdown to meet the price display requirements for your market.
+Note: If there are no available rooms, the response will be an empty array.
+Multiple rooms of the same type may be requested by including multiple instances of the `occupancy` parameter.
+The `nightly` array includes each individual night’s charges. When the total price includes fees, charges, or adjustments that are not divided by night, these amounts will be included in the stay rate array, which details charges applied to the entire stay (each check-in).
+
+Method accept arguments:
+- `checkin` Check-in date, in ISO 8601 format (YYYY-MM-DD).
+Required: true.
+- `checkout` Check-out date, in ISO 8601 format (YYYY-MM-DD). Availability can be searched up to 500 days in advance of this date. Total length of stay cannot exceed 28 nights.
+Required: true.
+- `currency` Requested currency for the rates, in ISO 4217 format. Currency Options: https://developer.expediapartnersolutions.com/reference/currency-options/
+Required: true.
+- `country_code` The country code of the traveler’s point of sale, in ISO 3166-1 alpha-2 format. This should represent the country where the shopping transaction is taking place. For more information see: https://www.iso.org/obp/ui/#search/code/ .
+Required: true.
+- `occupancy` Defines the requested occupancy for a single room. Each room must have at least 1 adult occupant.
+Format: `numberOfAdults[-firstChildAge[,nextChildAge]]`
+To request multiple rooms (of the same type), include one instance of occupancy for each room requested. Up to 8 rooms may be requested or booked at once. Examples:
+1) 2 adults, one 9-year-old and one 4-year-old would be represented by `occupancy=2-9,4`.
+2) A multi-room request to lodge an additional 2 adults would be represented by `occupancy=2-9,4;occupancy=2`.
+Required: true.
+- `property_id` The ID of the property you want to search for. You can provide 1 to 250 property_id parameters.
+Required: true.
+- `sales_channel` You must provide the sales channel for the display of rates. EPS dynamically provides the best content for optimal conversion on each sales channel. If you have a sales channel that is not currently supported in this list, please contact our support team.
+1) `website` - Standard website accessed from the customer’s computer
+2) `agent_tool` - Your own agent tool used by your call center or retail store agent
+3) `mobile_app` - An application installed on a phone or tablet device
+4) `mobile_web` - A web browser application on a phone or tablet device
+5) `meta` - Rates will be passed to and displayed on a 3rd party comparison website
+6) `cache` - Rates will be used to populate a local cache.
+Required: true.
+- `sales_environment` You must provide the sales environment in which rates will be sold. EPS dynamically provides the best content for optimal conversion. If you have a sales environment that is not currently supported in this list, please contact our support team.
+1) `hotel_package` - Use when selling the hotel with a transport product, e.g. flight & hotel.
+2) `hotel_only` - Use when selling the hotel as an individual product.
+3) `loyalty` - Use when you are selling the hotel as part of a loyalty program and the price is converted to points.
+Required: true.
+- `filter` Single filter type. Send multiple instances of this parameter to request multiple filters.
+1) `refundable` - Filters results to only show fully refundable rates.
+2) `expedia_collect` - Filters results to only show rates where payment is collected by Expedia at the time of booking. These properties can be eligible for payments via Expedia Affiliate Collect(EAC).
+3) `property_collect` - Filters results to only show rates where payment is collected by the property after booking. This can include rates that require a deposit by the property, dependent upon the deposit policies.
+Required: false.
+- `rate_plan_count` The number of rates to return per property. The rate’s price determines which rates are returned e.g. a rateplancount=4 will return the lowest 4 rates, but the rates are not ordered from lowest to highest or vice versa in the response. The lowest rate has been proven to provide the best conversion rate and so a value of 1 is recommended.
+The value must be greater than 0.
+Required: true.
+- `rate_option` Request specific rate options for each property. Send multiple instances of this parameter to request multiple rate options.
+Accepted values:
+1) `member` - Return member rates for each property. This feature must be enabled and requires a user to be logged in to request these rates.
+2) `net_rates` - Return net rates for each property. This feature must be enabled to request these rates.
+3) `cross_sell` - Identify if the traffic is coming from a cross sell booking. Where the traveler has booked another service (flight, car, activities…) before hotel.
+Required: false.
+- 'test' Shop calls have a test header that can be used to return set responses with the following keywords: https://developer.expediapartnersolutions.com/reference/rapid-shopping-test-request/ under keyword `Shop`.
+Required: false.
+
+```ruby
+EpsRapid::Shopping.price_check('properties/599536/rooms/201125633/rates/234071214?token=C~Oj46Zz8xJD', test: 'matched')
+```
+Confirms the price returned by the Property Availability response. Use this API to verify a previously-selected rate is still valid before booking. If the price is matched, the response returns a link to request a booking. If the price has changed, the response returns new price details and a booking link for the new price. If the rate is no longer available, the response will return a new Property Availability request link to search again for different rates. In the event of a price change, go back to Property Availability and book the property at the new price or return to additional rates for the property.
+Method accept two arguments:
+- `path` A link to price check, should be taken from `availability` response under key `...{'links': {'price_check': {'href': 'price check link'}` without EPS API version in the path.
+Required: true.
+- `test` Price check calls have a test header that can be used to return set responses with the following keywords: https://developer.expediapartnersolutions.com/reference/rapid-shopping-test-request/ under keyword `Price Check`.
+Required: false.
+
+```ruby
+EpsRapid::Shopping.payment_options('properties/599536/payment-options?token=C~Oj46Zz8xJD')
+```
+Returns the accepted payment options. Use this API to power your checkout page and display valid forms of payment, ensuring a smooth booking.
+Method accept one argument:
+- `path` A link to payment options, should be taken from `availability` response under key `...{'links': {'payment_options': {'href': 'payment options link'}` without EPS API version in the path.
+Required: true.
+
+```ruby
+EpsRapid::Shopping.deposit_policies('properties/12345/deposit-policies?token=REhZAQsABAE', test: 'all')
+```
+This link will be available in the shop response when rates require a deposit. It returns the amounts and dates for when any deposits are due. Deposit information is obtained by making a deposit-policies API call using this link.
+Method accept two arguments:
+- `path` A link to deposit policy, should be taken from `availability` response under key `...{'links': {'deposit_policies': {'href': 'deposit policies link'}` without EPS API version in the path.
+Required: true.
+- `test` Deposit Policy calls have a test header that can be used to return set responses with the following keywords: https://developer.expediapartnersolutions.com/reference/rapid-shopping-test-request/ under keyword `Deposit Policy`.
+Required: false.
+
+```ruby
+EpsRapid::Shopping.additional_rates('properties/12345/availability?token=REhZAQsAB')
+```
+Returns additional rates.
+Method accept one argument:
+- `path` A link to additional rates, should be taken from `availability` response under key `...{'links': {'additional_rates': {'href': 'additional rates link'}` without EPS API version in the path.
+Required: true.
+
+```ruby
+EpsRapid::Shopping.recommendation_rates('properties/12345/availability?token=REhZAQsAB')
+```
+Returns recommendation rates.
+Method accept one argument:
+- `path` A link to recommendation rates, should be taken from `availability` response under key `...{'links': {'recommendations': {'href': 'additional rates link'}` without EPS API version in the path.
+Required: true.
