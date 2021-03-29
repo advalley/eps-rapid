@@ -1,0 +1,1 @@
+{"credit_card":{"name":"Credit Card", "card_options":[{"name":"Discover"}, {"name":"Diner's Club International"}, {"name":"MasterCard", "processing_country":"US"}, {"name":"AmericanExpress"}, {"name":"JCB"}, {"name":"ChinaUnionPay"}, {"name":"BC Card"}, {"name":"Visa", "processing_country":"US"}]}}
