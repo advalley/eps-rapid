@@ -10,16 +10,26 @@ module EpsRapid
       def get(path, **params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Get.new(uri)
+        test_header = params.key?(:test) ? params[:test] : ''
 
-        fetch_data(uri, req)
+        fetch_data(uri, req, test_header)
+      end
+
+      def get_by_link(path, **params)
+        uri = URI("#{EpsRapid.base_path}/#{path}")
+        req = Net::HTTP::Get.new(uri)
+        test_header = params.key?(:test) ? params[:test] : ''
+
+        fetch_data(uri, req, test_header)
       end
 
       def post(path, body, **params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Post.new(uri)
         req.body = body.to_json
+        test_header = params.key?(:test) ? params[:test] : ''
 
-        fetch_data(uri, req)
+        fetch_data(uri, req, test_header)
       end
 
       private
@@ -27,15 +37,26 @@ module EpsRapid
       def generate_uri(path, **params)
         uri = URI("#{EpsRapid.base_path}/#{path}")
         params.merge!({ language: EpsRapid.language })
-        params.transform_values! { |v| v.to_s.tr(' ', '').split(',') }
-        uri.query = URI.encode_www_form(params)
+        transformed_params = transform_params(params)
+        uri.query = URI.encode_www_form(transformed_params)
         uri
       end
 
-      def fetch_data(uri, req)
+      def transform_params(**params)
+        params.each do |k, v|
+          if k == :occupancy
+            params[k] = v.to_s.tr(' ', '').split(';')
+          else
+            params[k] = v.to_s.tr(' ', '').split(',')
+          end
+        end
+      end
+
+      def fetch_data(uri, req, test_header)
         req['Authorization'] = EpsRapid.auth_header
         req['Accept'] = 'application/json'
         req['Content-Type'] = 'application/json'
+        req['Test'] = test_header if test_header != ''
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
         return JSON.parse(response.body) if response.code.to_i == HttpStatusCodes::HTTP_OK_CODE
@@ -60,7 +81,7 @@ module EpsRapid
         when HttpStatusCodes::HTTP_TOO_MANY_REQUESTS_CODE
           Exceptions::TooManyRequestsError
         else
-          Exceptions::EpsRapidApiError
+          Exceptions::EpsRapidError
         end
       end
 
