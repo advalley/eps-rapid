@@ -11,6 +11,8 @@ Documentation:
   Enabled: false
 Metrics/MethodLength:
   Max: 25
+Metrics/ClassLength:
+  Max: 120
 Metrics/CyclomaticComplexity:
   Max: 12
 Metrics/PerceivedComplexity:

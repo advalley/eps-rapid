@@ -7,6 +7,8 @@ require 'eps-rapid/errors/http_status_codes'
 require 'eps-rapid/geography'
 require 'eps-rapid/content'
 require 'eps-rapid/shopping'
+require 'eps-rapid/booking'
+require 'eps-rapid/manage_booking'
 require 'digest'
 
 module EpsRapid
