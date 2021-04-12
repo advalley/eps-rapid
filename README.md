@@ -225,3 +225,69 @@ Returns recommendation rates.
 Method accept one argument:
 - `path` A link to recommendation rates, should be taken from `availability` response under key `...{'links': {'recommendations': {'href': 'additional rates link'}` without EPS API version in the path.
 Required: true.
+
+### Recommendations API
+Data-driven personalized property recommendations.
+https://developer.expediapartnersolutions.com/documentation/rapid-recommendations-2-4/
+#### Methods
+```ruby
+EpsRapid::Recommendations.recommendations(checkin: '2021-05-20', checkout: '2021-05-22', destination_iata_airport_code: 'SEA', currency: 'USD', country_code: 'US', occupancy: '2', sales_channel: 'website', sales_environment: 'hotel_package', rate_plan_count: 1)
+```
+Calculates recommended properties based on the provided flight itinerary. Returns a sorted list of available properties; the first property in the response is the “strongest recommendation”. For each property, rates on available room types for properties is returned.
+Method accept arguments:
+- `checkin` Check-in date, in ISO 8601 format (YYYY-MM-DD).
+Required: true.
+- `checkout` Check-out date, in ISO 8601 format (YYYY-MM-DD). Availability can be searched up to 500 days in advance of this date. Total length of stay cannot exceed 28 nights.
+Required: true.
+- `destination_iata_airport_code' 3-character IATA airport code of the destination airport. The code must be upper case.
+Required: true.
+- `origin_iata_airport_code` 3-character IATA airport code of the origin airport. The code must be upper case.
+Required: false.
+- `cabin_class` The cabin class of the ticket. Use the highest cabin class if the journey inclues multiple cabin classes.
+Accepted values:
+1) `economy` - Economy cabin class.
+2) `premium_economy` - Premium economy cabin class.
+3) `business` - Business cabin class.
+4) `first` - First cabin class.
+Required: false.
+- `iata_airline_code` 2-character IATA airline code.
+Required: false.
+- `arrival` Arrival date and time, in extended ISO 8601 format.
+Required: false.
+- `currency` Requested currency for the rates, in ISO 4217 format. Currency Options: https://developer.expediapartnersolutions.com/reference/currency-options/
+Required: true.
+- `country_code` The country code of the traveler’s point of sale, in ISO 3166-1 alpha-2 format. This should represent the country where the shopping transaction is taking place. For more information see: https://www.iso.org/obp/ui/#search/code/ .
+Required: true.
+- `occupancy` Defines the requested occupancy for a single room. Each room must have at least 1 adult occupant.
+Format: `numberOfAdults[-firstChildAge[,nextChildAge]]`
+To request multiple rooms (of the same type), include one instance of occupancy for each room requested. Up to 8 rooms may be requested or booked at once. Examples:
+1) 2 adults, one 9-year-old and one 4-year-old would be represented by `occupancy=2-9,4`.
+2) A multi-room request to lodge an additional 2 adults would be represented by `occupancy=2-9,4;occupancy=2`.
+Required: true.
+- `sales_channel` You must provide the sales channel for the display of rates. EPS dynamically provides the best content for optimal conversion on each sales channel. If you have a sales channel that is not currently supported in this list, please contact our support team.
+1) `website` - Standard website accessed from the customer’s computer
+2) `agent_tool` - Your own agent tool used by your call center or retail store agent
+3) `mobile_app` - An application installed on a phone or tablet device
+4) `mobile_web` - A web browser application on a phone or tablet device
+5) `meta` - Rates will be passed to and displayed on a 3rd party comparison website
+6) `cache` - Rates will be used to populate a local cache.
+Required: true.
+- `sales_environment` You must provide the sales environment in which rates will be sold. EPS dynamically provides the best content for optimal conversion. If you have a sales environment that is not currently supported in this list, please contact our support team.
+1) `hotel_package` - Use when selling the hotel with a transport product, e.g. flight & hotel.
+2) `hotel_only` - Use when selling the hotel as an individual product.
+3) `loyalty` - Use when you are selling the hotel as part of a loyalty program and the price is converted to points.
+Required: true.
+- `filter` Single filter type. Send multiple instances of this parameter to request multiple filters.
+1) `refundable` - Filters results to only show fully refundable rates.
+2) `expedia_collect` - Filters results to only show rates where payment is collected by Expedia at the time of booking. These properties can be eligible for payments via Expedia Affiliate Collect(EAC).
+3) `property_collect` - Filters results to only show rates where payment is collected by the property after booking. This can include rates that require a deposit by the property, dependent upon the deposit policies.
+Required: false.
+- `rate_plan_count` The number of rates to return per property. The rate’s price determines which rates are returned e.g. a rateplancount=4 will return the lowest 4 rates, but the rates are not ordered from lowest to highest or vice versa in the response. The lowest rate has been proven to provide the best conversion rate and so a value of 1 is recommended.
+The value must be greater than 0.
+Required: true.
+- `rate_option` Request specific rate options for each property. Send multiple instances of this parameter to request multiple rate options.
+Accepted values:
+1) `member` - Return member rates for each property. This feature must be enabled and requires a user to be logged in to request these rates.
+2) `net_rates` - Return net rates for each property. This feature must be enabled to request these rates.
+3) `cross_sell` - Identify if the traffic is coming from a cross sell booking. Where the traveler has booked another service (flight, car, activities…) before hotel.
+Required: false.
