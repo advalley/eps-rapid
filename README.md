@@ -402,3 +402,20 @@ Accepted values:
 2) `net_rates` - Return net rates for each property. This feature must be enabled to request these rates.
 3) `cross_sell` - Identify if the traffic is coming from a cross sell booking. Where the traveler has booked another service (flight, car, activities…) before hotel.
 Required: false.
+
+### Notifications API
+EPS Notifications is a solution that lets you integrate with EPS more closely than ever. When changes occur that can impact your business, EPS will push details of the change directly to your systems via standard POST messages.  With our push notifications, you can remain informed, simplify operations, and scale your business.
+https://developer.expediapartnersolutions.com/documentation/notifications/
+#### Methods
+```ruby
+EpsRapid::Notifications.test_notification_event('itinerary.agent.create')
+```
+This request triggers a test notification according to the specified event_type. All event types supported by the Notifications API are available to test.
+Method accept one argument:
+- `event_type` The event type of the requested test notification.
+Required: true.
+
+```ruby
+EpsRapid::Notifications.undeliverable_notifications
+```
+This request returns any undelivered notifications for your subscription and test endpoints.

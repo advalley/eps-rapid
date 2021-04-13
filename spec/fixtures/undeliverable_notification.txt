@@ -1,0 +1,11 @@
+[
+  {
+    "event_id":"e02d6f41-4708-476f-915d-8a7032942e94",
+    "event_type":"itinerary.agent.change",
+    "event_time":"2021-04-28T20:31:03.423Z",
+    "itinerary_id":"1204309424793",
+    "email":"test@example.com",
+    "message":"An agent changed this itinerary.",
+    "affiliate_reference_id":"R194193582"
+  }
+]

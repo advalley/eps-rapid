@@ -10,6 +10,7 @@ require 'eps-rapid/shopping'
 require 'eps-rapid/booking'
 require 'eps-rapid/manage_booking'
 require 'eps-rapid/recommendations'
+require 'eps-rapid/notifications'
 require 'digest'
 
 module EpsRapid

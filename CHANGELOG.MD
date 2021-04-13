@@ -4,10 +4,11 @@
 - Geography resource(#geogrphy-resource)
 - Content resource(#content-resource)
 - Shopping resource(#shopping-resource)
-- Recommendations resource(#recommendation-resource)
 - Booking resource(#booking-resource)
 - Manage booking resource(#booking-resource)
 - Added methods put and delete to the client(#booking-resource)
+- Recommendations resource(#recommendation-resource)
+- Notifications resource(#notifications-resource)
 # Changed
 - Updated readme.md
 - Add test header to request(#shopping-resource)
