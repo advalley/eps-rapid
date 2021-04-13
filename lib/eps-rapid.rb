@@ -9,6 +9,7 @@ require 'eps-rapid/content'
 require 'eps-rapid/shopping'
 require 'eps-rapid/booking'
 require 'eps-rapid/manage_booking'
+require 'eps-rapid/recommendations'
 require 'digest'
 
 module EpsRapid

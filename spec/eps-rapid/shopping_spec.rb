@@ -184,24 +184,4 @@ RSpec.describe EpsRapid::Shopping do
       expect(response).to be_kind_of(Array)
     end
   end
-
-  describe '#recommendation_rates' do
-    it 'should return a recommendation rates list' do
-      stub_request(:get, 'https://test.ean.com/2.4/properties/12345/availability?token=REhZAQsABAMCx')
-        .with(
-          headers: {
-            'Accept' => 'application/json',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Authorization' => EpsRapid.auth_header,
-            'Content-Type' => 'application/json',
-            'Host' => 'test.ean.com',
-            'User-Agent' => 'Ruby'
-          }
-        ).to_return(status: 200, body: File.read('spec/fixtures/additional_rates.txt'))
-
-      response = EpsRapid::Shopping.recommendation_rates('properties/12345/availability?token=REhZAQsABAMCx')
-
-      expect(response).to be_kind_of(Array)
-    end
-  end
 end

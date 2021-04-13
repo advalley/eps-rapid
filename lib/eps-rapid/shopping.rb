@@ -21,9 +21,5 @@ module EpsRapid
     def self.additional_rates(path, **params)
       EpsRapid::Client.get(path, params)
     end
-
-    def self.recommendation_rates(path, **params)
-      EpsRapid::Client.get(path, params)
-    end
   end
 end
