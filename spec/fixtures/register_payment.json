@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "browser_accept_header": "*/*",
+  "encoded_browser_metadata": "ZW5jb2RlZF9icm93c2VyX21ldGFkYXRh",
+  "preferred_challenge_window_size": "medium",
+  "merchant_url": "https://server.adomainname.net",
+  "customer_account_details": {
+    "authentication_method": "guest",
+    "authentication_timestamp": "2018-02-12T11:59:00.000Z",
+    "create_date": "2018-09-15",
+    "change_date": "2018-09-17",
+    "password_change_date": "2018-09-17",
+    "add_card_attempts": 1,
+    "account_purchases": 1
+  },
+  "payments": [
+    {
+      "type": "customer_card",
+      "number": "4111111111111111",
+      "security_code": "123",
+      "expiration_month": "08",
+      "expiration_year": "2025",
+      "billing_contact": {
+        "given_name": "John",
+        "family_name": "Smith",
+        "address": {
+          "line_1": "555 1st St",
+          "line_2": "10th Floor",
+          "line_3": "Unit 12",
+          "city": "Seattle",
+          "state_province_code": "WA",
+          "postal_code": "98121",
+          "country_code": "US"
+        }
+      },
+      "enrollment_date": "2018-09-15"
+    }
+  ]
+}

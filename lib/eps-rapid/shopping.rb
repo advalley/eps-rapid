@@ -7,23 +7,19 @@ module EpsRapid
     end
 
     def self.price_check(path, **params)
-      EpsRapid::Client.get_by_link(path, params)
+      EpsRapid::Client.get(path, params)
     end
 
     def self.payment_options(path, **params)
-      EpsRapid::Client.get_by_link(path, params)
+      EpsRapid::Client.get(path, params)
     end
 
     def self.deposit_policies(path, **params)
-      EpsRapid::Client.get_by_link(path, params)
+      EpsRapid::Client.get(path, params)
     end
 
     def self.additional_rates(path, **params)
-      EpsRapid::Client.get_by_link(path, params)
-    end
-
-    def self.recommendation_rates(path, **params)
-      EpsRapid::Client.get_by_link(path, params)
+      EpsRapid::Client.get(path, params)
     end
   end
 end

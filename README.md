@@ -66,7 +66,7 @@ Required: true.
 
 ### Content API
 The EPS Rapid Content APIs provide you with access to content for all of EPS’s properties.
-https://developer.expediapartnersolutions.com/documentation/rapid-content-docs-2-4/#/Content/get_properties_content
+https://developer.expediapartnersolutions.com/documentation/rapid-content-docs-2-4/
 #### Methods
 ```ruby
 EpsRapid::Content.content_list(property_id: '123456, 2345678', brand_id: '12345, 23456', business_model: 'expedia_collect')
@@ -125,7 +125,7 @@ Chain and brand names are provided in English only.
 
 ### Shopping API
 The EPS Rapid Shopping API provides you with access to live rates and availability for over 500,000 properties globally.
-https://developer.expediapartnersolutions.com/documentation/rapid-shopping-docs-2-4/#/Shopping/
+https://developer.expediapartnersolutions.com/documentation/rapid-shopping-docs-2-4/
 #### Methods
 ```ruby
 EpsRapid::Content.availability(occupancy: '2-9,4;2-8,6', property_id: '12345,567899', country_code: 'US', sales_environment: 'hotel_package', sales_channel: 'website', checkin: '2021-05-01', checkout: '2021-05-03', currency: 'USD', rate_plan_count: '1')
@@ -225,6 +225,183 @@ Returns recommendation rates.
 Method accept one argument:
 - `path` A link to recommendation rates, should be taken from `availability` response under key `...{'links': {'recommendations': {'href': 'additional rates link'}` without EPS API version in the path.
 Required: true.
+
+### Booking API
+The EPS Rapid Booking API allows you to book rooms & rates confirmed by the price check response.
+https://developer.expediapartnersolutions.com/documentation/rapid-booking-docs-2-4/
+#### Methods
+```ruby
+EpsRapid::Booking.register_payment('payment-sessions?token=ABSDBV', {version": "1", "browser_accept_header": "*/*", ...}, customer_ip: '127.0.0.1')
+```
+This method only applies to transactions where EPS takes the customer’s payment information. This includes both Expedia Collect and Property Collect transactions.
+This link will be available in the Price Check response if payment registration is required. It returns a payment session ID and a link to create a booking. This will be the first step in the booking flow only if you’ve opted into Two-Factor Authentication to comply with the September 2019 EU Regulations for PSD2.
+Method accept arguments:
+- `path` A link to open payment session. This link will be available in the Price Check response if payment registration is required.
+Required: true.
+- `body` Json object. Requirements check under `PaymentSessionsRequestBody` in https://developer.expediapartnersolutions.com/documentation/rapid-booking-docs-2-4/#/Booking/post_payment_sessions .
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::Booking.create_booking('itineraries/7562428514179?token=QldfCGlcUA4DVVhW', {affiliate_reference_id: "4480ABC", hold: false, email: "john@example.com",...}, customer_ip: '127.0.0.1')
+```
+The link will be available in the Price Check response or in the register payments response when Two-Factor Authentication is used. It returns an itinerary id and links to retrieve reservation details, cancel a held booking, resume a held booking or complete payment session. Please note that depending on the state of the booking, the response will contain only the applicable link(s).
+Method accept arguments:
+- `path` A link to create booking, should be taken from `EpsRapid::Shopping.price_check` response under key `...{'links': {'book': {'href': 'create booking link'}` without EPS API version in the path.
+Required: true.
+- `body` Json object. Requirements check under `ItineraryRequestBody` in https://developer.expediapartnersolutions.com/documentation/rapid-booking-docs-2-4/#/Booking/post_itineraries
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::Booking.resume_booking('itineraries/7562428514179?token=ABE3TYUj23', customer_ip: '127.0.0.1')
+```
+This link will be available in the booking response after creating a held booking.
+Method accept arguments:
+- `path` A link to resume booking, should be taken from `EpsRapid::Booking.create_booking` response under key `href` from `...{'links': [{'rel': 'resume', method: 'put', 'href': 'resume booking link'}]}` without EPS API version in the path.
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::Booking.complete_payment_session('itineraries/7562428514179/payment-sessions?token=ABE3TYUj23', customer_ip: '127.0.0.1')
+```
+This link will be available in the booking response only if you’ve opted into Two-Factor Authentication to comply with the September 2019 EU Regulations for PSD2.
+Method accept arguments:
+- `path` A link to complete payment session.
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+### Manage Booking API
+The EPS Rapid Manage Booking API allows you to discover how to use the Retrieve, Change and Cancel API calls to manage existing itineraries.
+https://developer.expediapartnersolutions.com/documentation/rapid-manage-booking-docs-2-4/
+#### Methods
+```ruby
+EpsRapid::ManageBooking.retrieve_bookings(email: 'test@example.com', affiliate_reference_id: '4480ABCQXCZS', customer_ip: '127.0.0.1')
+```
+This can be called directly without a token when an affiliate reference id is provided. It returns details about bookings associated with an affiliate reference id, along with cancel links to cancel the bookings.
+Method accept arguments:
+- `email` Email associated with the booking.
+Required: true
+- `affiliate_reference_id` The affilliate reference id value. This field supports a maximum of 28 characters.
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::ManageBooking.retrieve_booking('7372514319381', token: 'ABDE34Tj', email: 'test@example.com', customer_ip: '127.0.0.1')
+```
+This call returns itinerary details and links to resume or cancel the booking.
+Method accept arguments:
+- `itinerary_id` This parameter is used only to prefix the token value - no ID value is used.
+Required: true.
+- `token` Provided as part of the link object and used to maintain state across calls. This simplifies each subsequent call by limiting the amount of information required at each step and reduces the potential for errors. Token values cannot be viewed or changed.
+Required: false.
+- `email` Email associated with the booking.
+Required: true if the token is not provided the request.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::ManageBooking.cancel_held_booking('itineraries/7562428514179?token=ABE3TYUj23', customer_ip: '127.0.0.1')
+```
+This link will be available in a held booking response.
+Method accept arguments:
+- `path` A link to cancel held booking, should be taken from `retrieve` response under key `...{'links': {'cancel': {'href': 'cancel booking link'}` without EPS API version in the path.
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::ManageBooking.cancel_room('itineraries/7372514319381/rooms/512dab07-c9b7-494c-a517-05763aed4768?token=QFlCEVhQR', customer_ip: '127.0.0.1')
+```
+This link will be available in the retrieve response.
+Method accept arguments:
+- `path` A link to cancel room booking, should be taken from `retrieve` response under key `...{'links': {'cancel': {'href': 'cancel room link'}` without EPS API version in the path.
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+```ruby
+EpsRapid::ManageBooking.change_room('itineraries/7372514319381/rooms/512dab07-c9b7-494c-a517-05763aed4768?token=QFlCEVhQR', {given_name: 'Jhon', family_name: 'Smith', ...}, customer_ip: '127.0.0.1')
+```
+This link will be available in the retrieve response. Changes in smoking preference and special request will be passed along to the property and are not guaranteed.
+Method accept arguments:
+- `path` A link to cancel room booking, should be taken from `retrieve` response under key `...{'links': {'change': {'href': 'cancel room link'}` without EPS API version in the path.
+Required: true.
+- `body` Json object. Requirements check under `RoomDetailsRequestBody` in https://developer.expediapartnersolutions.com/documentation/rapid-manage-booking-docs-2-4/#/Manage_Bookings/put_itineraries__itinerary_id__rooms__room_id_
+Required: true.
+- `customer_ip` IP address of the customer, as captured by your integration. Send IPV4 addresses only. Ensure your integration passes the customer’s IP, not your own. This value helps determine their location and assign the correct payment gateway.
+Required: true.
+
+### Recommendations API
+Data-driven personalized property recommendations.
+https://developer.expediapartnersolutions.com/documentation/rapid-recommendations-2-4/
+#### Methods
+```ruby
+EpsRapid::Recommendations.recommendations(checkin: '2021-05-20', checkout: '2021-05-22', destination_iata_airport_code: 'SEA', currency: 'USD', country_code: 'US', occupancy: '2', sales_channel: 'website', sales_environment: 'hotel_package', rate_plan_count: 1)
+```
+Calculates recommended properties based on the provided flight itinerary. Returns a sorted list of available properties; the first property in the response is the “strongest recommendation”. For each property, rates on available room types for properties is returned.
+Method accept arguments:
+- `checkin` Check-in date, in ISO 8601 format (YYYY-MM-DD).
+Required: true.
+- `checkout` Check-out date, in ISO 8601 format (YYYY-MM-DD). Availability can be searched up to 500 days in advance of this date. Total length of stay cannot exceed 28 nights.
+Required: true.
+- `destination_iata_airport_code' 3-character IATA airport code of the destination airport. The code must be upper case.
+Required: true.
+- `origin_iata_airport_code` 3-character IATA airport code of the origin airport. The code must be upper case.
+Required: false.
+- `cabin_class` The cabin class of the ticket. Use the highest cabin class if the journey inclues multiple cabin classes.
+Accepted values:
+1) `economy` - Economy cabin class.
+2) `premium_economy` - Premium economy cabin class.
+3) `business` - Business cabin class.
+4) `first` - First cabin class.
+Required: false.
+- `iata_airline_code` 2-character IATA airline code.
+Required: false.
+- `arrival` Arrival date and time, in extended ISO 8601 format.
+Required: false.
+- `currency` Requested currency for the rates, in ISO 4217 format. Currency Options: https://developer.expediapartnersolutions.com/reference/currency-options/
+Required: true.
+- `country_code` The country code of the traveler’s point of sale, in ISO 3166-1 alpha-2 format. This should represent the country where the shopping transaction is taking place. For more information see: https://www.iso.org/obp/ui/#search/code/ .
+Required: true.
+- `occupancy` Defines the requested occupancy for a single room. Each room must have at least 1 adult occupant.
+Format: `numberOfAdults[-firstChildAge[,nextChildAge]]`
+To request multiple rooms (of the same type), include one instance of occupancy for each room requested. Up to 8 rooms may be requested or booked at once. Examples:
+1) 2 adults, one 9-year-old and one 4-year-old would be represented by `occupancy=2-9,4`.
+2) A multi-room request to lodge an additional 2 adults would be represented by `occupancy=2-9,4;occupancy=2`.
+Required: true.
+- `sales_channel` You must provide the sales channel for the display of rates. EPS dynamically provides the best content for optimal conversion on each sales channel. If you have a sales channel that is not currently supported in this list, please contact our support team.
+1) `website` - Standard website accessed from the customer’s computer
+2) `agent_tool` - Your own agent tool used by your call center or retail store agent
+3) `mobile_app` - An application installed on a phone or tablet device
+4) `mobile_web` - A web browser application on a phone or tablet device
+5) `meta` - Rates will be passed to and displayed on a 3rd party comparison website
+6) `cache` - Rates will be used to populate a local cache.
+Required: true.
+- `sales_environment` You must provide the sales environment in which rates will be sold. EPS dynamically provides the best content for optimal conversion. If you have a sales environment that is not currently supported in this list, please contact our support team.
+1) `hotel_package` - Use when selling the hotel with a transport product, e.g. flight & hotel.
+2) `hotel_only` - Use when selling the hotel as an individual product.
+3) `loyalty` - Use when you are selling the hotel as part of a loyalty program and the price is converted to points.
+Required: true.
+- `filter` Single filter type. Send multiple instances of this parameter to request multiple filters.
+1) `refundable` - Filters results to only show fully refundable rates.
+2) `expedia_collect` - Filters results to only show rates where payment is collected by Expedia at the time of booking. These properties can be eligible for payments via Expedia Affiliate Collect(EAC).
+3) `property_collect` - Filters results to only show rates where payment is collected by the property after booking. This can include rates that require a deposit by the property, dependent upon the deposit policies.
+Required: false.
+- `rate_plan_count` The number of rates to return per property. The rate’s price determines which rates are returned e.g. a rateplancount=4 will return the lowest 4 rates, but the rates are not ordered from lowest to highest or vice versa in the response. The lowest rate has been proven to provide the best conversion rate and so a value of 1 is recommended.
+The value must be greater than 0.
+Required: true.
+- `rate_option` Request specific rate options for each property. Send multiple instances of this parameter to request multiple rate options.
+Accepted values:
+1) `member` - Return member rates for each property. This feature must be enabled and requires a user to be logged in to request these rates.
+2) `net_rates` - Return net rates for each property. This feature must be enabled to request these rates.
+3) `cross_sell` - Identify if the traffic is coming from a cross sell booking. Where the traveler has booked another service (flight, car, activities…) before hotel.
+Required: false.
 
 ### Notifications API
 EPS Notifications is a solution that lets you integrate with EPS more closely than ever. When changes occur that can impact your business, EPS will push details of the change directly to your systems via standard POST messages.  With our push notifications, you can remain informed, simplify operations, and scale your business.
