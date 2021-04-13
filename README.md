@@ -225,3 +225,20 @@ Returns recommendation rates.
 Method accept one argument:
 - `path` A link to recommendation rates, should be taken from `availability` response under key `...{'links': {'recommendations': {'href': 'additional rates link'}` without EPS API version in the path.
 Required: true.
+
+### Notifications API
+EPS Notifications is a solution that lets you integrate with EPS more closely than ever. When changes occur that can impact your business, EPS will push details of the change directly to your systems via standard POST messages.  With our push notifications, you can remain informed, simplify operations, and scale your business.
+https://developer.expediapartnersolutions.com/documentation/notifications/
+#### Methods
+```ruby
+EpsRapid::Notifications.test_notification_event('itinerary.agent.create')
+```
+This request triggers a test notification according to the specified event_type. All event types supported by the Notifications API are available to test.
+Method accept one argument:
+- `event_type` The event type of the requested test notification.
+Required: true.
+
+```ruby
+EpsRapid::Notifications.undeliverable_notifications
+```
+This request returns any undelivered notifications for your subscription and test endpoints.

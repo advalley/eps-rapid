@@ -59,9 +59,14 @@ module EpsRapid
         req['Test'] = test_header if test_header != ''
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
-        return JSON.parse(response.body) if response.code.to_i == HttpStatusCodes::HTTP_OK_CODE
-
-        raise error_class(response.code), "Code: #{response.code}, Error: #{map_error_messages(response.body)}"
+        case response.code.to_i
+        when HttpStatusCodes::HTTP_OK_CODE, HttpStatusCodes::HTTP_CREATED_CODE
+          JSON.parse(response.body)
+        when HttpStatusCodes::HTTP_NO_CONTENT_CODE
+          'Code: 204, No content'
+        else
+          raise error_class(response.code), "Code: #{response.code}, Error: #{map_error_messages(response.body)}"
+        end
       end
 
       def error_class(code)
