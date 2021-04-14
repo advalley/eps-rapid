@@ -1,3 +1,4 @@
+### Version 1.0.0
 # Added
 - Client(#geogrphy-resource)
 - Error handling(#geogrphy-resource)
