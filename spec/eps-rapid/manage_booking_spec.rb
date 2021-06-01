@@ -16,7 +16,8 @@ RSpec.describe EpsRapid::ManageBooking do
     it 'should return bookings list' do
       stub_request(
         :get,
-        'https://test.ean.com/2.4/itineraries?email=test@example.com&affiliate_reference_id=4480ABCQXCZS&language=en-US'
+        'https://test.ean.com/2.4/itineraries?email=test@example.com&'\
+        'customer_ip=127.0.0.1&affiliate_reference_id=4480ABCQXCZS&language=en-US'
       ).with(
         headers: {
           'Accept' => 'application/json',
@@ -44,7 +45,7 @@ RSpec.describe EpsRapid::ManageBooking do
     it 'should return error if affiliate_reference_id is empty' do
       stub_request(
         :get,
-        'https://test.ean.com/2.4/itineraries?email=test@example.com&language=en-US'
+        'https://test.ean.com/2.4/itineraries?customer_ip=127.0.0.1&email=test@example.com&language=en-US'
       ).with(
         headers: {
           'Accept' => 'application/json',
@@ -70,7 +71,7 @@ RSpec.describe EpsRapid::ManageBooking do
     it 'should return booking by email' do
       stub_request(
         :get,
-        'https://test.ean.com/2.4/itineraries/7372514319381?email=test@example.com&language=en-US'
+        'https://test.ean.com/2.4/itineraries/7372514319381?customer_ip=127.0.0.1&email=test@example.com&language=en-US'
       ).with(
         headers: {
           'Accept' => 'application/json',
@@ -100,7 +101,7 @@ RSpec.describe EpsRapid::ManageBooking do
     it 'should return booking by email' do
       stub_request(
         :get,
-        'https://test.ean.com/2.4/itineraries/7372514319381?token=ABDE34Tj&language=en-US'
+        'https://test.ean.com/2.4/itineraries/7372514319381?customer_ip=127.0.0.1&token=ABDE34Tj&language=en-US'
       ).with(
         headers: {
           'Accept' => 'application/json',
@@ -130,7 +131,7 @@ RSpec.describe EpsRapid::ManageBooking do
     it 'should return error if itinerary_id is invalid' do
       stub_request(
         :get,
-        'https://test.ean.com/2.4/itineraries/73?token=ABDE34Tj&language=en-US'
+        'https://test.ean.com/2.4/itineraries/73?customer_ip=127.0.0.1&token=ABDE34Tj&language=en-US'
       ).with(
         headers: {
           'Accept' => 'application/json',

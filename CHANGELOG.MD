@@ -18,3 +18,6 @@
 - Move recommendation rate from Shopping to Recommendations class(#recommendation-resource)
 # Removed
 - Remove redundant methods get_by_link & post_by_link form client(#booking-resource)
+### Version 1.0.1
+# Changed
+- add compatibility with ruby 3.0.0

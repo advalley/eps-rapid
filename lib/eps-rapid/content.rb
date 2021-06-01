@@ -7,19 +7,19 @@ module EpsRapid
     end
 
     def self.guest_review(property_id)
-      EpsRapid::Client.get("properties/#{property_id}/guest-reviews")
+      EpsRapid::Client.get("properties/#{property_id}/guest-reviews", {})
     end
 
     def self.catalog_file
-      EpsRapid::Client.get('files/properties/catalog')
+      EpsRapid::Client.get('files/properties/catalog', {})
     end
 
     def self.content_file
-      EpsRapid::Client.get('files/properties/content')
+      EpsRapid::Client.get('files/properties/content', {})
     end
 
     def self.chains
-      EpsRapid::Client.get('chains')
+      EpsRapid::Client.get('chains', {})
     end
   end
 end
