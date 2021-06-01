@@ -128,7 +128,7 @@ The EPS Rapid Shopping API provides you with access to live rates and availabili
 https://developer.expediapartnersolutions.com/documentation/rapid-shopping-docs-2-4/
 #### Methods
 ```ruby
-EpsRapid::Content.availability(occupancy: '2-9,4;2-8,6', property_id: '12345,567899', country_code: 'US', sales_environment: 'hotel_package', sales_channel: 'website', checkin: '2021-05-01', checkout: '2021-05-03', currency: 'USD', rate_plan_count: '1')
+EpsRapid::Shopping.availability(occupancy: '2-9,4;2-8,6', property_id: '12345,567899', country_code: 'US', sales_environment: 'hotel_package', sales_channel: 'website', checkin: '2021-05-01', checkout: '2021-05-03', currency: 'USD', rate_plan_count: '1')
 ```
 Returns rates on available room types for specified properties (maximum of 250 properties per request). The response includes rate details such as promos, whether the rate is refundable, cancellation penalties and a full price breakdown to meet the price display requirements for your market.
 Note: If there are no available rooms, the response will be an empty array.

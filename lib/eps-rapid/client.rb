@@ -7,7 +7,7 @@ require 'json'
 module EpsRapid
   class Client
     class << self
-      def get(path, **params)
+      def get(path, params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Get.new(uri)
         test_header, customer_ip_header = additional_headers(params)
@@ -15,7 +15,7 @@ module EpsRapid
         fetch_data(uri, req, test_header, customer_ip_header)
       end
 
-      def post(path, body, **params)
+      def post(path, body, params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Post.new(uri)
         req.body = body.to_json
@@ -24,16 +24,17 @@ module EpsRapid
         fetch_data(uri, req, test_header, customer_ip_header)
       end
 
-      def put(path, body = {}, **params)
+      def put(path, body = {}, params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Put.new(uri)
         req.body = body.to_json
+
         test_header, customer_ip_header = additional_headers(params)
 
         fetch_data(uri, req, test_header, customer_ip_header)
       end
 
-      def delete(path, **params)
+      def delete(path, params)
         uri = generate_uri(path, params)
         req = Net::HTTP::Delete.new(uri)
         test_header, customer_ip_header = additional_headers(params)
@@ -43,17 +44,17 @@ module EpsRapid
 
       private
 
-      def generate_uri(path, **params)
+      def generate_uri(path, params)
         uri = URI("#{EpsRapid.base_path}/#{path}")
         params.merge!({ language: EpsRapid.language })
         transformed_params = transform_params(params)
-        transformed_params.delete(:customer_ip)
+        transformed_params.reject { |k,_| k == :customer_ip }
         uri.query = URI.encode_www_form(transformed_params) unless path.include?('token')
 
         uri
       end
 
-      def transform_params(**params)
+      def transform_params(params)
         params.each do |k, v|
           params[k] =
             if k == :occupancy
